@@ -18,7 +18,7 @@ function DateSheett() {
           </div>
           
           <a
-            href="/datesheet.pdf"
+            href="/datesheet.jpg"
             download
             className="inline-flex items-center bg-blue-900 text-white px-8 py-4 rounded-lg hover:bg-blue-800 transition-all duration-300 shadow-md hover:shadow-xl font-semibold text-lg"
           >
