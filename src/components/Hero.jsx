@@ -1,8 +1,10 @@
+
+
 import React, { useState, useRef } from "react";
 import { MapPin, Users, Award, Trophy, Star, Sparkles, ChevronRight } from "lucide-react";
 import emailjs from "emailjs-com";
 import { useInView } from "framer-motion";
-import Swal from "sweetalert2"
+import Swal from "sweetalert2";
 
 function Hero() {
   const heroRef = useRef(null);
@@ -12,6 +14,53 @@ function Hero() {
   const [formData, setFormData] = useState({ name: "", email: "", grade: "", message: "" });
   const [loading, setLoading] = useState(false);
 
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const serviceId = "service_dpihwq9";
+    const templateId = "template_7ax7w8g";
+    const publicKey = "CRSDtCgkpZKZWu3DA";
+
+    emailjs.send(serviceId, templateId, formData, publicKey)
+      .then(() => {
+  Swal.fire({
+    icon: "success",
+    title: "Application Sent!",
+    text: "Your application has been submitted successfully.",
+    background: "rgba(15, 23, 42, 0.85)", // slate-900 glass
+    color: "#fff",
+    iconColor: "#38bdf8", // blue-400
+    confirmButtonText: "OK",
+    confirmButtonColor: "#f59e0b", // orange-500
+    customClass: {
+      popup: "backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30",
+    },
+  });
+
+  setShowModal(false);
+  setFormData({ name: "", email: "", grade: "", message: "" });
+})
+.catch(() => {
+  Swal.fire({
+    icon: "error",
+    title: "Failed!",
+    text: "Failed to send application. Please try again.",
+    background: "rgba(15, 23, 42, 0.85)", // same glass theme
+    color: "#fff",
+    iconColor: "#ef4444", // red-500
+    confirmButtonText: "Retry",
+    confirmButtonColor: "#f97316", // orange-500 but slightly warmer for error
+    customClass: {
+      popup: "backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30",
+    },
+  });
+})
+.finally(() => setLoading(false));
+}; 
+
   const stats = [
     { value: "2000+", label: "Students", color: "from-blue-500 to-cyan-500", icon: <Users size={24} /> },
     { value: "100+", label: "Teachers", color: "from-purple-500 to-pink-500", icon: <Award size={24} /> },
@@ -19,209 +68,119 @@ function Hero() {
     { value: "30+", label: "Years Legacy", color: "from-orange-500 to-red-500", icon: <Star size={24} /> },
   ];
 
-  // Handle input changes
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  // Handle form submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    // Replace these with your EmailJS keys
-    const serviceId = "service_dpihwq9";
-    const templateId = "template_7ax7w8g";
-    const publicKey = "CRSDtCgkpZKZWu3DA";
-
-    emailjs
-  .send(serviceId, templateId, formData, publicKey)
-  .then(
-    (response) => {
-      Swal.fire({
-        icon: "success",
-        title: "Application Sent!",
-        text: "Your application has been submitted successfully.",
-        confirmButtonColor: "#3085d6",
-      });
-      setShowModal(false);
-      setFormData({ name: "", email: "", grade: "", message: "" });
-    },
-    (error) => {
-      console.error("Failed to send email:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Failed!",
-        text: "Failed to send your application. Please try again later.",
-        confirmButtonColor: "#d33",
-      });
-    }
-  )
-  .finally(() => setLoading(false));
-  };
-
   return (
     <div id="home" className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden pt-20">
-      {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse -top-48 -left-48"></div>
-        <div className="absolute w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-700 top-1/2 right-0"></div>
-        <div className="absolute w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000 -bottom-48 left-1/3"></div>
+        <div className="absolute w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse -top-48 -left-48"></div>
+        <div className="absolute w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse delay-700 top-1/2 right-0"></div>
+        <div className="absolute w-96 h-96 bg-pink-500/30 rounded-full blur-3xl animate-pulse delay-1000 -bottom-48 left-1/3"></div>
       </div>
 
-      <div ref={heroRef} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className={`space-y-6 text-center lg:text-left transition-all duration-1000 ${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-            <div className="inline-block">
-              <span className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-blue-900 rounded-full text-sm font-bold shadow-lg animate-pulse">
-                <Sparkles className="inline mr-2" size={16} />
-                Excellence Since 1990
-              </span>
-            </div>
+      <div ref={heroRef} className="relative pb-10 mb-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className={`${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-1000 space-y-8`}>
+           <span className="px-6 py-3.5  bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white rounded-full font-bold shadow-xl animate-pulse">
+  <Sparkles className="inline mr-2" size={16} /> Excellence Since 1990
+</span>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight">
-              <span className="block text-white mb-2">Bright Moon</span>
+            <h1 className="text-6xl font-black leading-tight text-white drop-shadow-xl">
+              Bright Moon
               <span className="block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent animate-gradient">
                 Public High School
               </span>
             </h1>
 
-            <p className="text-xl text-gray-300 leading-relaxed">
-              Nurturing young minds and building tomorrow's leaders through quality education, strong values, and holistic development.
+            <p className="text-2xl text-gray-300 leading-relaxed">
+              Nurturing minds & building tomorrow's leaders.
             </p>
 
-            <div className="flex items-center justify-center lg:justify-start gap-2 text-gray-300">
-              <MapPin className="text-yellow-400" size={20} />
-              <span>Jhand Road, Mughalabad, Punjab</span>
+            <div className="flex gap-3 text-gray-300 bg-white/10 backdrop-blur-sm rounded-2xl p-4 w-fit">
+              <MapPin className="text-yellow-400" /> Jhand Road, Mughalabad, Punjab
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
+            <div className="flex gap-5 pt-6">
               <button
                 onClick={() => setShowModal(true)}
-                className="group relative px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-blue-900 rounded-xl font-bold overflow-hidden transform hover:scale-105 transition-all duration-300 shadow-xl"
+                className="px-10 py-5 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-xl"
               >
-                <span className="relative z-10 flex items-center justify-center">
-                  Apply Now
-                  <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-yellow-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                Apply Now <ChevronRight className="inline ml-2" />
               </button>
-              <button className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-xl font-bold hover:bg-white/20 transition-all duration-300">
+
+              <button className="px-10 py-5 bg-white/10 text-white border border-white/30 rounded-2xl font-bold hover:bg-white/20 transition">
                 Learn More
               </button>
             </div>
           </div>
 
-          {/* Principal Card */}
-          <div className={`relative transition-all duration-1000 delay-300 ${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-            <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl transform hover:scale-105 transition-all duration-500">
-              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-blue-900 px-6 py-3 rounded-full text-sm font-bold shadow-lg animate-bounce">
-                Principal's Message
-              </div>
-
-              <div className="w-48 h-48 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 p-1 shadow-xl">
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center overflow-hidden">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-                    alt="Principal"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              <div className="text-center space-y-3">
-                <h3 className="text-2xl font-bold text-white">Principal Name</h3>
-                <p className="text-yellow-400 font-semibold">M.Ed, B.Ed</p>
-                <p className="text-gray-300 italic leading-relaxed">
-                  "Education is the most powerful weapon which you can use to change the world. At Bright Moon, we shape future leaders with knowledge, integrity, and compassion."
-                </p>
+          <div className={`${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-1000 delay-300`}>
+            <div className="bg-white/10 rounded-3xl p-10 border border-white/30 shadow-2xl backdrop-blur-xl">
+              <div className="text-center space-y-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png" className="w-48 h-48 mx-auto rounded-full border-4 border-yellow-400 shadow-xl" />
+                <h3 className="text-3xl font-bold text-white">Principal Name</h3>
+                <p className="text-gray-300 italic">"Education changes the world."</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Stats Section */}
         <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 transition-all duration-1000 delay-500 ${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          {stats.map((stat, i) => (
-            <div
-              key={i}
-              className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-110 cursor-pointer overflow-hidden"
-            >
-              <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500`}></div>
-              <div className="relative z-10 text-center space-y-2">
-                <div className="text-yellow-400 flex justify-center group-hover:scale-125 transition-transform duration-300">{stat.icon}</div>
-                <div className="text-4xl font-black text-white">{stat.value}</div>
-                <div className="text-gray-300 font-medium">{stat.label}</div>
-              </div>
+          {stats.map((s, i) => (
+            <div key={i} className="bg-white/10 p-6 rounded-2xl border border-white/30 backdrop-blur-xl text-center hover:scale-110 transition shadow-lg">
+              <div className="text-yellow-400">{s.icon}</div>
+              <div className="text-4xl font-bold text-white">{s.value}</div>
+              <div className="text-gray-300">{s.label}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Apply Modal */}
-      {showModal && (
-  <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
-    <div
-      className="relative bg-gradient-to-br from-white via-blue-50 to-purple-50 rounded-3xl p-8 w-full max-w-md shadow-2xl transform animate-scale-in border-4 border-white/20"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Decorative glowing blobs */}
-      <div className="absolute -top-2 -right-2 w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full blur-2xl opacity-50"></div>
-      <div className="absolute -bottom-2 -left-2 w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-2xl opacity-50"></div>
+    {showModal && (
+  <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex justify-center items-center p-5 z-50">
+    <div className="bg-white/10 border border-white/30 backdrop-blur-2xl rounded-3xl p-8 max-w-md w-full shadow-2xl relative animate-fadeIn">
 
-      {/* Close Button */}
       <button
         onClick={() => setShowModal(false)}
-        className="absolute top-4 right-4 w-10 h-10 bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-full flex items-center justify-center hover:scale-110 transform transition-all duration-300 shadow-lg font-bold text-lg z-10"
+        className="absolute right-4 top-4 text-white text-2xl font-bold hover:text-red-400 transition"
       >
         ✕
       </button>
 
-      {/* Modal Content */}
-      <h2 className="text-3xl font-extrabold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+      <h2 className="text-3xl font-extrabold mb-6 text-center bg-gradient-to-r from-blue-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent drop-shadow-md">
         Apply Now
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          type="text"
+          className="w-full p-3.5 bg-white/10 text-white border border-white/30 rounded-xl placeholder-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
           name="name"
           placeholder="Full Name"
-          value={formData.name}
           onChange={handleChange}
-          className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           required
         />
         <input
-          type="email"
+          className="w-full p-3.5 bg-white/10 text-white border border-white/30 rounded-xl placeholder-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
           name="email"
           placeholder="Email"
-          value={formData.email}
           onChange={handleChange}
-          className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           required
         />
         <input
-          type="text"
+          className="w-full p-3.5 bg-white/10 text-white border border-white/30 rounded-xl placeholder-gray-300 focus:ring-2 focus:ring-orange-400 outline-none"
           name="grade"
           placeholder="Grade/Class"
-          value={formData.grade}
           onChange={handleChange}
-          className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           required
         />
         <textarea
+          className="w-full p-3.5 bg-white/10 text-white border border-white/30 rounded-xl placeholder-gray-300 h-24 focus:ring-2 focus:ring-orange-400 outline-none"
           name="message"
           placeholder="Message"
-          value={formData.message}
           onChange={handleChange}
-          className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition-all h-28"
           required
         />
+
         <button
-          type="submit"
-          className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:scale-105"
-          disabled={loading}
+          className="w-full p-3.5 bg-gradient-to-r from-blue-500 via-orange-500 to-red-500 text-white rounded-xl font-bold hover:scale-105 transition-all shadow-xl"
         >
           {loading ? "Sending..." : "Submit"}
         </button>
@@ -230,19 +189,39 @@ function Hero() {
   </div>
 )}
 
-
       <style>{`
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
-        }
+        @keyframes gradient { 0%,100%{background-position:0%50%} 50%{background-position:100%50%} }
+        .animate-gradient { background-size:200% 200%; animation:gradient 3s infinite; }
+        @keyframes fadeIn { 
+  from { opacity:0; transform:scale(0.95); } 
+  to { opacity:1; transform:scale(1); } 
+}
+.animate-fadeIn { animation: fadeIn .3s ease-out; }
+.neon-popup {
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 25px rgba(255, 115, 0, 0.6);
+  border-radius: 18px !important;
+}
+
+.neon-title {
+  background: linear-gradient(to right, #ffdd00, #ff7b00, #ff0048);
+  -webkit-background-clip: text;
+  color: transparent !important;
+  font-weight: 800;
+  text-shadow: 0 0 18px rgba(255, 130, 0, 0.6);
+}
+
+.neon-btn {
+  background: linear-gradient(to right, #008cff, #ff7b00, #ff0048) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 12px rgba(255, 130, 0, 0.8);
+}
+
       `}</style>
     </div>
   );
 }
-
 export default Hero;

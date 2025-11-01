@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, GraduationCap, Award, Target, Eye, Heart, Users, Trophy, BookOpen, Microscope, Palette, Globe, MapPin, Mail, Phone, Download, ZoomIn, ChevronRight, Star, Sparkles } from 'lucide-react';
 
